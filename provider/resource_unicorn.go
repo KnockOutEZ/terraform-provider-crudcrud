@@ -53,13 +53,13 @@ func resourceCreateItem(d *schema.ResourceData, m interface{}) error {
 		Colour: d.Get("colour").(string),
 	}
 
-	err := apiClient.NewItem(&item)
+	unicorn,err := apiClient.NewItem(&item)
 
 	if err != nil {
 		return err
 	}
-	fmt.Println(item.Id,"item id")
-	d.SetId(item.Id)
+	fmt.Println(unicorn.Id,"item id")
+	d.SetId(unicorn.Id)
 	return nil
 }
 

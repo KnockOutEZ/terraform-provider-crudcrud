@@ -1,6 +1,7 @@
 package client
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -8,40 +9,39 @@ import (
 
 func TestClient_GetAll(t *testing.T) {
 	testCases := []struct {
-		testName string
-		seedData []Unicorn
+		testName  string
+		seedData  []Unicorn
 		expectErr bool
 	}{
 		{
 			testName: "more items",
 			seedData: []Unicorn{
 				{
-					Id: "65895754831c5703e89e3c89",
-					Name:  "one",
-					Age:   10,
+					Id:     "65895754831c5703e89e3c89",
+					Name:   "one",
+					Age:    10,
 					Colour: "red",
 				},
 				{
-					Id: "65895759831c5703e89e3c8a",
-					Name:  "two",
-					Age:   10,
+					Id:     "65895759831c5703e89e3c8a",
+					Name:   "two",
+					Age:    10,
 					Colour: "red",
 				},
 				{
-					Id: "6589575e831c5703e89e3c8b",
-					Name:  "three",
-					Age:   10,
+					Id:     "6589575e831c5703e89e3c8b",
+					Name:   "three",
+					Age:    10,
 					Colour: "red",
 				},
 			},
 			expectErr: false,
 		},
 	}
-	
 
 	for _, tc := range testCases {
 		t.Run(tc.testName, func(t *testing.T) {
-			client := NewClient("https://crudcrud.com/api", "f7b6da402e194650b3ce879659c04a50")
+			client := NewClient("https://crudcrud.com/api", "5ebc57a23671498fb94a605fd7c95362")
 
 			items, err := client.GetAll()
 			if tc.expectErr {
@@ -60,17 +60,17 @@ func TestClient_GetAll(t *testing.T) {
 func TestClient_GetItem(t *testing.T) {
 	testCases := []struct {
 		testName     string
-		itemId     string
+		itemId       string
 		seedData     map[string]Unicorn
 		expectErr    bool
 		expectedResp *Unicorn
 	}{
 		{
 			testName: "item exists",
-			itemId: "65895754831c5703e89e3c89",
+			itemId:   "65895754831c5703e89e3c89",
 			seedData: map[string]Unicorn{
 				"unicorn1": {
-					Id: "65895754831c5703e89e3c89",
+					Id:     "65895754831c5703e89e3c89",
 					Name:   "unicorn1",
 					Age:    11,
 					Colour: "blue",
@@ -78,7 +78,7 @@ func TestClient_GetItem(t *testing.T) {
 			},
 			expectErr: false,
 			expectedResp: &Unicorn{
-				Id: "65895754831c5703e89e3c89",
+				Id:     "65895754831c5703e89e3c89",
 				Name:   "one",
 				Age:    10,
 				Colour: "red",
@@ -88,7 +88,7 @@ func TestClient_GetItem(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.testName, func(t *testing.T) {
-			client := NewClient("https://crudcrud.com/api", "f7b6da402e194650b3ce879659c04a50")
+			client := NewClient("https://crudcrud.com/api", "5ebc57a23671498fb94a605fd7c95362")
 
 			item, err := client.GetItem(tc.itemId)
 			if tc.expectErr {
@@ -122,27 +122,28 @@ func TestClient_NewItem(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.testName, func(t *testing.T) {
-			client := NewClient("https://crudcrud.com/api", "f7b6da402e194650b3ce879659c04a50")
+			client := NewClient("https://crudcrud.com/api", "5ebc57a23671498fb94a605fd7c95362")
 
-			err := client.NewItem(tc.newItem)
+			unicorn, err := client.NewItem(tc.newItem)
 			if tc.expectErr {
 				assert.Error(t, err)
 				return
 			}
-			})
+			fmt.Println(unicorn.Id, "item id")
+		})
 	}
 }
 
 func TestClient_UpdateItem(t *testing.T) {
 	testCases := []struct {
-		testName	string
-		testId 		string
+		testName    string
+		testId      string
 		updatedItem *Unicorn
 		expectErr   bool
 	}{
 		{
 			testName: "item exists",
-			testId: "65896274831c5703e89e3cba",
+			testId:   "65896274831c5703e89e3cba",
 			updatedItem: &Unicorn{
 				Name:   "four",
 				Age:    10,
@@ -154,7 +155,7 @@ func TestClient_UpdateItem(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.testName, func(t *testing.T) {
-			client := NewClient("https://crudcrud.com/api", "f7b6da402e194650b3ce879659c04a50")
+			client := NewClient("https://crudcrud.com/api", "5ebc57a23671498fb94a605fd7c95362")
 
 			err := client.UpdateItem(tc.testId, tc.updatedItem)
 			if tc.expectErr {
@@ -168,19 +169,19 @@ func TestClient_UpdateItem(t *testing.T) {
 func TestClient_DeleteItem(t *testing.T) {
 	testCases := []struct {
 		testName  string
-		itemId  string
+		itemId    string
 		expectErr bool
 	}{
 		{
-			testName: "item exists",
-			itemId: "6589627b831c5703e89e3cbb",
+			testName:  "item exists",
+			itemId:    "6589627b831c5703e89e3cbb",
 			expectErr: false,
 		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.testName, func(t *testing.T) {
-			client := NewClient("https://crudcrud.com/api", "f7b6da402e194650b3ce879659c04a50")
+			client := NewClient("https://crudcrud.com/api", "5ebc57a23671498fb94a605fd7c95362")
 
 			err := client.DeleteItem(tc.itemId)
 			if tc.expectErr {

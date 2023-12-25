@@ -55,18 +55,26 @@ func (c *Client) GetItem(id string) (*Unicorn, error) {
 	return item, nil
 }
 
-func (c *Client) NewItem(item *Unicorn) (error) {
+func (c *Client) NewItem(item *Unicorn) (*Unicorn,error) {
 	buf := bytes.Buffer{}
 	err := json.NewEncoder(&buf).Encode(item)
 	if err != nil {
-		return err
+		return nil,err
 	}
-	_, err = c.httpRequest("unicorns", "POST", buf)
+	body, err := c.httpRequest("unicorns", "POST", buf)
 	if err != nil {
-		return err
+		return nil,err
 	}
+
+	err = json.NewDecoder(body).Decode(item)
+	if err != nil {
+		return nil,err
+	}
+
+	defer body.Close()
+
 	
-	return err
+	return item,nil
 }
 
 
@@ -108,7 +116,7 @@ func (c *Client) httpRequest(path, method string, body bytes.Buffer) (closer io.
 		return nil, err
 	}
 
-	if resp.StatusCode != http.StatusOK || resp.StatusCode != http.StatusCreated {
+	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated {
 		respBody := new(bytes.Buffer)
 		_, err := respBody.ReadFrom(resp.Body)
 		if err != nil {

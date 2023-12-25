@@ -1,11 +1,11 @@
 provider "crudcrud" {
   address = "https://crudcrud.com/api"
-  token   = "f7b6da402e194650b3ce879659c04a50"
+  token   = "5ebc57a23671498fb94a605fd7c95362"
 }
 
 resource "example_unicorn" "crudcrud" {
  provider = crudcrud
- name = "this_is_an_item"
- age = 42
- colour = "red"
+ name = "this_is_an_item1"
+ age = 421111
+ colour = "blue"
 }
