@@ -108,13 +108,13 @@ func (c *Client) httpRequest(path, method string, body bytes.Buffer) (closer io.
 		return nil, err
 	}
 
-	if resp.StatusCode != http.StatusOK {
+	if resp.StatusCode != http.StatusOK || resp.StatusCode != http.StatusCreated {
 		respBody := new(bytes.Buffer)
 		_, err := respBody.ReadFrom(resp.Body)
 		if err != nil {
-			return nil, fmt.Errorf("got a non 200 status code: %v", resp.StatusCode)
+			return nil, fmt.Errorf("got a non 200 || 201 status code: %v", resp.StatusCode)
 		}
-		return nil, fmt.Errorf("got a non 200 status code: %v - %s", resp.StatusCode, respBody.String())
+		return nil, fmt.Errorf("got a non 200 || 201 status code: %v - %s", resp.StatusCode, respBody.String())
 	}
 	return resp.Body, nil
 }
